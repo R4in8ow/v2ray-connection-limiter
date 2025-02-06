@@ -16,7 +16,7 @@ Install Guide :
 
 If you need to use Virtual Environment.
 
-1 - python3 -m venv myenv
+1 - python3 -m venv myenv  #if you need to install apt install python3.10-venv
 
 2 - source myenv/bin/activate
 
