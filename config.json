@@ -1,7 +1,7 @@
 {
-    "db_address": "/etc/x-ui/x-ui.db", 
-    "max_allowed_connections": 5,
-    "telegrambot_token": "YOUR_TELEGRAM_BOT_TOKEN",
-    "telegram_chat_id": "YOUR_TELEGRAM_CHAT_ID"
-  }
-
+  "db_address": "/etc/x-ui/x-ui.db",
+  "max_allowed_connections": 1,
+  "telegrambot_token": "YOUR_TELEGRAM_BOT_TOKEN",
+  "telegram_chat_id": "YOUR_TELEGRAM_CHAT_ID",
+  "ignored_users": [2, 5, 10]  # Add user IDs you want to ignore
+}
