@@ -12,7 +12,9 @@ Install Guide :
 
 4 - put it on background => nohup python3 main.py > output.log 2>&1 &   
 (check process use it >>> tail -f output.log )
+
 Kill process use it >> ps aux | grep main.py
+
                        kill -9 <process_id>
                        
 5 - you can also set the telegram bot token + your tlg chat_id for notification. it's pretty clear on the code.
