@@ -6,7 +6,9 @@ Install Guide :
 
 1 - install python.
 
-2 -        pip3 install requests and pip3 install schedule
+2 -       
+
+                         pip3 install requests and pip3 install schedule
 
 3 - install netstat (if your server doesn't have it so install it - Debian :
 
@@ -30,15 +32,23 @@ Kill process use it >>
 
 If you need to use Virtual Environment.
 
-1 -                        python3 -m venv myenv  
+1 -   
+
+                           python3 -m venv myenv  
 
 #if you need to install :
 
                           apt install python3.10-venv
 
-2 -                       source myenv/bin/activate
+2 -                      
 
-3-                        pip install requests schedule psutil
+                          source myenv/bin/activate
 
-4-                        python3 main.py
+3-  
+
+                           pip install requests schedule psutil
+
+4-    
+
+                           python3 main.py
                   
