@@ -18,7 +18,7 @@ Install Guide :
                           
 (check process use it >>> 
 
-                           tail -f output.log )
+                           tail -f output.log 
 
 Kill process use it >>
 
