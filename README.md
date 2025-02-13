@@ -6,27 +6,39 @@ Install Guide :
 
 1 - install python.
 
-2 - pip3 install requests and pip3 install schedule
+2 -        pip3 install requests and pip3 install schedule
 
-3 - install netstat (if your server doesn't have it so install it - Debian : apt install net-tools)
+3 - install netstat (if your server doesn't have it so install it - Debian :
 
-4 - put it on background => nohup python3 main.py > output.log 2>&1 &   
-(check process use it >>> tail -f output.log )
+                                         apt install net-tools
 
-Kill process use it >> ps aux | grep main.py
+4 - put it on background =>
 
-                       kill -9 <process_id>
+                          nohup python3 main.py > output.log 2>&1 &   
+                          
+(check process use it >>> 
+
+                           tail -f output.log )
+
+Kill process use it >>
+
+                            ps aux | grep main.py
+
+                            kill -9 <process_id>
                        
 5 - you can also set the telegram bot token + your tlg chat_id for notification. it's pretty clear on the code.
 
 If you need to use Virtual Environment.
 
-1 - python3 -m venv myenv  #if you need to install apt install python3.10-venv
+1 -                        python3 -m venv myenv  
 
-2 - source myenv/bin/activate
+#if you need to install :
 
-3- pip install requests schedule psutil
+                          apt install python3.10-venv
 
-4- python3 main.py
+2 -                       source myenv/bin/activate
 
-3 - pip install requests schedule
+3-                        pip install requests schedule psutil
+
+4-                        python3 main.py
+                  
