@@ -7,6 +7,8 @@ import schedule
 import json
 import logging
 from signal import signal, SIGINT
+from concurrent.futures import ThreadPoolExecutor
+import psutil
 
 # Load configuration from config.json
 with open('config.json', 'r') as config_file:
@@ -22,7 +24,7 @@ _ignored_users = config.get('ignored_users', [])  # List of user IDs to ignore
 # Set up logging
 logging.basicConfig(
     filename='xui_monitor.log',
-    level=logging.INFO,
+    level=logging.WARNING,  # Reduced logging level
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
@@ -77,12 +79,17 @@ def checkNewUsers():
     except Exception as e:
         logging.error(f"Unexpected error in checkNewUsers: {e}")
 
-def init():
-    users_list = getUsers()
-    for user in users_list:
-        thread = AccessChecker(user)
-        thread.start()
-        logging.info(f"Starting checker for: {user['name']} (ID: {user['id']})")
+def get_connection_count(port):
+    try:
+        connections = psutil.net_connections()
+        count = 0
+        for conn in connections:
+            if conn.laddr.port == port and conn.status == 'ESTABLISHED':
+                count += 1
+        return count
+    except Exception as e:
+        logging.error(f"Error in get_connection_count: {e}")
+        return 0
 
 class AccessChecker(threading.Thread):
     def __init__(self, user):
@@ -94,11 +101,7 @@ class AccessChecker(threading.Thread):
         user_port = self.user['port']
         while True:
             try:
-                netstate_data = os.popen(
-                    f"netstat -np 2>/dev/null | grep :{user_port} | "
-                    "awk '{if($3!=0) print $5;}' | cut -d: -f1 | sort | uniq -c | sort -nr | head"
-                ).read()
-                connection_count = len(netstate_data.split("\n")) - 1
+                connection_count = get_connection_count(user_port)
                 if connection_count > _max_allowed_connections:
                     user_remark = user_remark.replace(" ", "%20")
                     requests.get(
@@ -106,16 +109,22 @@ class AccessChecker(threading.Thread):
                         f"chat_id={_telegram_chat_id}&text={user_remark}%20locked"
                     )
                     disableAccount(user_port)
-                    logging.info(f"Inbound with port {user_port} (ID: {self.user['id']}) blocked")
-                else:
-                    time.sleep(2)
+                    logging.warning(f"Inbound with port {user_port} (ID: {self.user['id']}) blocked")
+                time.sleep(10)  # Increased sleep time to reduce CPU usage
             except Exception as e:
                 logging.error(f"Unexpected error in AccessChecker: {e}")
                 break
 
+def init():
+    users_list = getUsers()
+    with ThreadPoolExecutor(max_workers=5) as executor:  # Limited thread pool
+        for user in users_list:
+            executor.submit(AccessChecker(user).start())  # Fixed parentheses
+            logging.info(f"Starting checker for: {user['name']} (ID: {user['id']})")
+
 # Initialize and start the script
 init()
-schedule.every(10).minutes.do(checkNewUsers)
+schedule.every(30).minutes.do(checkNewUsers)  # Increased schedule interval
 
 # Main loop
 while True:
